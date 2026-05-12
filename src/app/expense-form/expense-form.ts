@@ -35,7 +35,8 @@ export class ExpenseForm {
       ]
     }
   ];
-  amount = signal(0);
+  amount = signal("");
+  rawAmount = signal(0);
   title = signal("Expense");
   notes = signal("");
   expenseTypes = computed(() => {
@@ -54,5 +55,16 @@ export class ExpenseForm {
 
   protected onNotesChanged(event: Event) {
     this.notes.set((event.target as HTMLInputElement).value);
+  }
+
+  protected onAmountInput(event: Event) {
+    const _amount = (event.target as HTMLInputElement).value;
+
+    const _rawAmount = _amount.replace(/\D/g, '');
+    this.rawAmount.set(Number(_rawAmount));
+
+    const localeString = localStorage.getItem('lang') === 'en' ? 'en-US' : 'vi-VN';
+    const formattedAmount = this.rawAmount().toLocaleString(localeString);
+    this.amount.set(formattedAmount);
   }
 }
