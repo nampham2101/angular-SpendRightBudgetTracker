@@ -11,6 +11,7 @@
   <div class="flex flex-col gap-1">
     <label for="">{{ 'notes' | transloco }}:</label>
     <textarea placeholder="Notes"
+              [value]="notes()"
               (input)="onNotesChanged($event)"
               class="border rounded-md p-3 pt-1 pb-1"></textarea>
   </div>
