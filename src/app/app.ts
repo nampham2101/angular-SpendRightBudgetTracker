@@ -22,6 +22,7 @@ export class App {
 
   protected setLanguage(lang: string) {
     localStorage.setItem('lang', lang);
+    this.language.set(lang);
     this.transloco.setActiveLang(lang);
   }
 }
