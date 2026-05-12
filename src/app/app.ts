@@ -1,8 +1,11 @@
 import { Component, signal } from '@angular/core';
+import {ExpenseForm} from './expense-form/expense-form';
 
 @Component({
   selector: 'app-root',
-  imports: [],
+  imports: [
+    ExpenseForm
+  ],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
