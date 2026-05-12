@@ -1,24 +1,24 @@
 <div class="flex flex-col gap-3">
   <h3 class="text-2xl font-bold text-heading">{{title()}}</h3>
   <div class="flex flex-col gap-1">
-    <label for="">Amount:</label>
+    <label for="">{{ 'amount' | transloco }}:</label>
     <input type="text"
            [value]="amount()"
            class="border rounded-md p-3 pt-1 pb-1">
   </div>
   <div class="flex flex-col gap-1">
-    <label for="">Notes:</label>
+    <label for="">{{ 'notes' | transloco }}:</label>
     <textarea placeholder="Notes"
               (input)="onNotesChanged($event)"
               class="border rounded-md p-3 pt-1 pb-1"></textarea>
   </div>
   <div class="flex flex-col gap-1">
-    <label for="">Type:</label>
+    <label for="">{{ 'type' | transloco }}:</label>
     <select name="" id="" class="border rounded-md">
       @for (expenseType of expenseTypes(); track expenseType.id) {
         <option [selected]="expenseType.selected">{{expenseType.name}}</option>
       }
     </select>
   </div>
-  <button class="border rounded-md mt-5 p-3 pt-1 pb-1 bg-blue-700 text-white">Save</button>
+  <button class="border rounded-md mt-5 p-3 pt-1 pb-1 bg-blue-700 text-white">{{ 'save' | transloco }}</button>
 </div>

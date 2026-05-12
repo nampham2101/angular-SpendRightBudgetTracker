@@ -1,9 +1,12 @@
 import {Component, computed, signal} from '@angular/core';
 import {ExpenseType} from '../expense-type';
+import {TranslocoPipe} from '@jsverse/transloco';
 
 @Component({
   selector: 'app-expense-form',
-  imports: [],
+  imports: [
+    TranslocoPipe
+  ],
   templateUrl: './expense-form.html',
   styleUrl: './expense-form.css',
 })
