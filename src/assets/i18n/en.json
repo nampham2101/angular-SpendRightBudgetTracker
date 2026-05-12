@@ -1,6 +1,6 @@
 {
   "amount": "Amount",
   "notes": "Notes",
-  "type": "Type",
+  "type": "Category",
   "save": "Save"
 }
