@@ -32,6 +32,7 @@ export class ExpenseForm {
       ]
     }
   ];
+  amount = signal(0);
   title = signal("Expense");
   notes = signal("");
   expenseTypes = computed(() => {
