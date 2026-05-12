@@ -1,3 +1,17 @@
-@for (transaction of transactionService.transactions$ | async; track transaction.id) {
-  {{transaction.notes}}
-}
+<div class="flex flex-col">
+  <div class="flex grow border">
+    <div class="flex-1 border-r font-bold p-1 pl-2">{{'date' | transloco}}</div>
+    <div class="flex-1 border-r font-bold p-1 pl-2">{{ 'type' | transloco }}</div>
+    <div class="flex-1 border-r font-bold p-1 pl-2">{{'amount' | transloco}}</div>
+    <div class="flex-1 font-bold p-1 pl-2">{{ 'notes' | transloco }}</div>
+  </div>
+
+  @for (transaction of transactionService.transactions$ | async; track transaction.id) {
+    <div class="flex grow border">
+      <div class="flex-1 border-r font-bold p-1 pl-2">{{transaction.createdDate}}</div>
+      <div class="flex-1 border-r font-bold p-1 pl-2">{{transaction.typeId}}</div>
+      <div class="flex-1 border-r font-bold p-1 pl-2">{{transaction.amount}}</div>
+      <div class="flex-1 font-bold p-1 pl-2">{{transaction.notes}}</div>
+    </div>
+  }
+</div>

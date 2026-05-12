@@ -2,5 +2,6 @@
   "amount": "Amount",
   "notes": "Notes",
   "type": "Category",
-  "save": "Save"
+  "save": "Save",
+  "date": "Date"
 }
