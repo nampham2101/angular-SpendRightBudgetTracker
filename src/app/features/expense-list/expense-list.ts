@@ -27,7 +27,7 @@ export class ExpenseList {
           const category = EXPENSE_TYPES.find(category => category.id === transaction.typeId)
           transaction.category = category ? category.name : 'Unknown';
           return transaction;
-        });
+        }).sort((a,b) => b.createdDate - a.createdDate);
       })
     )
   }
