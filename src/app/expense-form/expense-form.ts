@@ -1,6 +1,7 @@
-import {Component, computed, signal} from '@angular/core';
+import {Component, computed, ElementRef, signal, viewChild} from '@angular/core';
 import {ExpenseType} from '../expense-type';
 import {TranslocoPipe} from '@jsverse/transloco';
+import {TransactionService} from '../transaction-service';
 
 @Component({
   selector: 'app-expense-form',
@@ -35,6 +36,7 @@ export class ExpenseForm {
       ]
     }
   ];
+
   amount = signal("");
   rawAmount = signal(0);
   title = signal("Expense");
@@ -53,6 +55,11 @@ export class ExpenseForm {
     }));
   });
 
+  typeSelect = viewChild<ElementRef<HTMLSelectElement>>('typeSelect')
+
+  constructor(protected transactionService: TransactionService) {
+  }
+
   protected onNotesChanged(event: Event) {
     this.notes.set((event.target as HTMLInputElement).value);
   }
@@ -66,5 +73,24 @@ export class ExpenseForm {
     const localeString = localStorage.getItem('lang') === 'en' ? 'en-US' : 'vi-VN';
     const formattedAmount = this.rawAmount().toLocaleString(localeString);
     this.amount.set(formattedAmount);
+  }
+
+  protected save() {
+    const typeId = this.typeSelect()?.nativeElement.value;
+
+    this.transactionService.addTransaction(
+      this.rawAmount(),
+      this.notes().trim(),
+      Number(typeId)
+    ).subscribe({
+      next: () => {
+        this.amount.set("");
+        this.rawAmount.set(0);
+        this.notes.set("");
+      },
+      error: err => {
+        console.error('Error adding transaction', err);
+      }
+    });
   }
 }

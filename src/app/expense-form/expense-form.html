@@ -16,11 +16,12 @@
   </div>
   <div class="flex flex-col gap-1">
     <label for="">{{ 'type' | transloco }}:</label>
-    <select name="" id="" class="border rounded-md">
+    <select #typeSelect class="border rounded-md">
       @for (expenseType of expenseTypes(); track expenseType.id) {
-        <option [selected]="expenseType.selected">{{expenseType.name}}</option>
+        <option [value]="expenseType.id" [selected]="expenseType.selected">{{expenseType.name}}</option>
       }
     </select>
   </div>
-  <button class="border rounded-md mt-5 p-3 pt-1 pb-1 bg-blue-700 text-white">{{ 'save' | transloco }}</button>
+  <button (click)="save()"
+          class="border rounded-md mt-5 p-3 pt-1 pb-1 bg-blue-700 text-white">{{ 'save' | transloco }}</button>
 </div>

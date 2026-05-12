@@ -1,1 +1,3 @@
-<p>expense-list works!</p>
+@for (transaction of transactionService.transactions$ | async; track transaction.id) {
+  {{transaction.notes}}
+}
