@@ -38,6 +38,7 @@ export class TransactionService {
       amount: amount,
       notes: notes,
       typeId: typeId,
+      category: '',
       createdDate: Date.now()
     };
 

@@ -1,17 +1,42 @@
 import { Component } from '@angular/core';
 import {TransactionService} from '../../core/services/transaction-service';
-import {AsyncPipe} from '@angular/common';
+import {AsyncPipe, CurrencyPipe, DatePipe} from '@angular/common';
 import {TranslocoPipe} from '@jsverse/transloco';
+import {map, Observable} from 'rxjs';
+import {Transaction} from '../../shared/models/transaction';
+import {EXPENSE_TYPES} from '../../shared/data/expense-types';
 
 @Component({
   selector: 'app-expense-list',
   imports: [
     AsyncPipe,
-    TranslocoPipe
+    TranslocoPipe,
+    DatePipe,
+    CurrencyPipe
   ],
   templateUrl: './expense-list.html',
   styleUrl: './expense-list.css',
 })
 export class ExpenseList {
-  constructor(protected transactionService: TransactionService) {}
+  transactions$: Observable<Transaction[]>;
+  constructor(protected transactionService: TransactionService) {
+    this.transactions$ = this.transactionService.transactions$.pipe(
+      map(transactions => {
+        return [...transactions].map(transaction => {
+
+          const category = EXPENSE_TYPES.find(category => category.id === transaction.typeId)
+          transaction.category = category ? category.name : 'Unknown';
+          return transaction;
+        });
+      })
+    )
+  }
+
+  protected getCurrentCode() {
+    return localStorage.getItem('lang') === 'vi' ? 'VND' : 'USD';
+  }
+
+  protected getCurrentLocal() {
+    return localStorage.getItem('lang') === 'vi' ? 'vi-VN' : 'en-US';
+  }
 }

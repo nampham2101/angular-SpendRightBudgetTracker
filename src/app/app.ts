@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, signal} from '@angular/core';
-import {ExpenseForm} from './features/expense-form/expense-form';
+import ExpenseForm from './features/expense-form/expense-form';
 import {ExpenseList} from './features/expense-list/expense-list';
 import {TranslocoService} from '@jsverse/transloco';
 

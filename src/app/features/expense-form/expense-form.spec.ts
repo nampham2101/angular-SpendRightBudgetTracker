@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ExpenseForm } from './expense-form';
+import ExpenseForm from './expense-form';
 
 describe('ExpenseForm', () => {
   let component: ExpenseForm;

@@ -6,12 +6,15 @@
     <div class="flex-1 font-bold p-1 pl-2">{{ 'notes' | transloco }}</div>
   </div>
 
-  @for (transaction of transactionService.transactions$ | async; track transaction.id) {
+  @for (transaction of transactions$ | async; track transaction.id) {
     <div class="flex grow border">
-      <div class="flex-1 border-r font-bold p-1 pl-2">{{transaction.createdDate}}</div>
-      <div class="flex-1 border-r font-bold p-1 pl-2">{{transaction.typeId}}</div>
-      <div class="flex-1 border-r font-bold p-1 pl-2">{{transaction.amount}}</div>
-      <div class="flex-1 font-bold p-1 pl-2">{{transaction.notes}}</div>
+      <div class="flex-1 border-r p-1 pl-2">{{transaction.createdDate | date: 'dd/MM/yyyy HH:mm'}}</div>
+      <div class="flex-1 border-r p-1 pl-2">{{transaction.category}}</div>
+      <div class="flex-1 border-r p-1 pl-2">{{transaction.amount | currency:getCurrentCode()
+                                                                            :'symbol'
+                                                                            :'1.0-0'
+                                                                            :getCurrentLocal()}}</div>
+      <div class="flex-1 p-1 pl-2">{{transaction.notes}}</div>
     </div>
   }
 </div>
