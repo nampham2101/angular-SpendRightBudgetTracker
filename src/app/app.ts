@@ -1,6 +1,6 @@
-import {Component, signal} from '@angular/core';
-import {ExpenseForm} from './expense-form/expense-form';
-import {ExpenseList} from './expense-list/expense-list';
+import {ChangeDetectionStrategy, Component, signal} from '@angular/core';
+import {ExpenseForm} from './features/expense-form/expense-form';
+import {ExpenseList} from './features/expense-list/expense-list';
 import {TranslocoService} from '@jsverse/transloco';
 
 @Component({
@@ -10,7 +10,8 @@ import {TranslocoService} from '@jsverse/transloco';
     ExpenseList
   ],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class App {
   protected readonly title = signal('Spend Right - Budget Tracker');

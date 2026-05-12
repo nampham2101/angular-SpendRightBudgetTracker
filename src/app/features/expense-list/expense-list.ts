@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {TransactionService} from '../transaction-service';
+import {TransactionService} from '../../core/services/transaction-service';
 import {AsyncPipe} from '@angular/common';
 
 @Component({

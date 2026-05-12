@@ -1,7 +1,7 @@
 import {Component, computed, ElementRef, signal, viewChild} from '@angular/core';
-import {ExpenseType} from '../expense-type';
+import {ExpenseType} from '../../shared/models/expense-type';
 import {TranslocoPipe} from '@jsverse/transloco';
-import {TransactionService} from '../transaction-service';
+import {TransactionService} from '../../core/services/transaction-service';
 
 @Component({
   selector: 'app-expense-form',
