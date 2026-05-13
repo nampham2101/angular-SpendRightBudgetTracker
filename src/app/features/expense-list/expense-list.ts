@@ -1,5 +1,5 @@
 import { AsyncPipe, CurrencyPipe, DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { map, Observable } from 'rxjs';
 import { LocalePreferenceService } from '../../core/services/locale-preference';
@@ -18,6 +18,11 @@ import { Transaction } from '../../shared/models/transaction';
 export class ExpenseList {
   protected readonly locale = inject(LocalePreferenceService);
   protected readonly transactionService = inject(TransactionService);
+
+  /** VND: whole units; USD: up to two fraction digits. */
+  protected readonly amountDigitsInfo = computed(() =>
+    this.locale.activeLang() === 'vi' ? '1.0-0' : '1.2-2',
+  );
 
   readonly transactions$: Observable<Transaction[]> = this.transactionService.transactions$.pipe(
     map((transactions) =>

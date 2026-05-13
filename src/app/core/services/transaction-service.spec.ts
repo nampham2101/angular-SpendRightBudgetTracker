@@ -125,4 +125,45 @@ describe('TransactionService', () => {
       });
     });
   });
+
+  describe('convertStoredAmountsForLanguageChange', () => {
+    it('should convert VND to USD when switching vi to en', () => {
+      const txs: Transaction[] = [
+        { id: 1, amount: 26_000, notes: 'a', typeId: 1, category: '', createdDate: 1 },
+        { id: 2, amount: 52_000, notes: 'b', typeId: 1, category: '', createdDate: 2 },
+      ];
+      localStorage.setItem('transactions', JSON.stringify(txs));
+      const svc = new TransactionService();
+
+      svc.convertStoredAmountsForLanguageChange('vi', 'en');
+
+      const out = svc['transactionsSubject'].value;
+      expect(out[0].amount).toBe(1);
+      expect(out[1].amount).toBe(2);
+    });
+
+    it('should convert USD to VND when switching en to vi', () => {
+      const txs: Transaction[] = [
+        { id: 1, amount: 1.5, notes: 'a', typeId: 1, category: '', createdDate: 1 },
+      ];
+      localStorage.setItem('transactions', JSON.stringify(txs));
+      const svc = new TransactionService();
+
+      svc.convertStoredAmountsForLanguageChange('en', 'vi');
+
+      expect(svc['transactionsSubject'].value[0].amount).toBe(39_000);
+    });
+
+    it('should no-op when from and to are the same', () => {
+      const txs: Transaction[] = [
+        { id: 1, amount: 100, notes: 'a', typeId: 1, category: '', createdDate: 1 },
+      ];
+      localStorage.setItem('transactions', JSON.stringify(txs));
+      const svc = new TransactionService();
+
+      svc.convertStoredAmountsForLanguageChange('en', 'en');
+
+      expect(svc['transactionsSubject'].value[0].amount).toBe(100);
+    });
+  });
 });

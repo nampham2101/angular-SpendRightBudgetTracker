@@ -14,7 +14,7 @@
       <div class="flex-1 border-r p-1 pl-2">{{ (transaction.categoryKey || 'jar.unknown') | transloco }}</div>
       <div class="flex-1 border-r p-1 pl-2">{{transaction.amount | currency:locale.currencyCode()
                                                                             :'symbol'
-                                                                            :'1.0-0'
+                                                                            :amountDigitsInfo()
                                                                             :locale.numberLocale()}}</div>
       <div class="flex-1 p-1 pl-2">{{transaction.notes}}</div>
     </div>
