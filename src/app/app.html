@@ -1,20 +1,22 @@
 <div class="flex flex-col h-screen gap-5">
-  <header class="bg-blue-500 p-5 flex">
-    <h1 class="grow text-white text-2xl font-bold text-heading">{{title()}}</h1>
-    <div class="flex gap-1 items-center">
-      <button type="button"
-              [class]="locale.activeLang() !== 'en' ? 'text-white' : 'text-white underline font-bold'"
-              (click)="setLanguage('en')"
-              class="bg-transparent border-0 cursor-pointer p-0 font-inherit">English</button>
-      <span class="text-white">/</span>
-      <button type="button"
-              [class]="locale.activeLang() !== 'vi' ? 'text-white' : 'text-white underline font-bold'"
-              (click)="setLanguage('vi')"
-              class="bg-transparent border-0 cursor-pointer p-0 font-inherit">Tiếng Việt</button>
+  <header class="bg-blue-500">
+    <div class="max-w-5xl mx-auto px-5 py-5 flex">
+      <h1 class="grow text-white text-2xl font-bold text-heading">{{title()}}</h1>
+      <div class="flex gap-1 items-center">
+        <button type="button"
+                [class]="locale.activeLang() !== 'en' ? 'text-white' : 'text-white underline font-bold'"
+                (click)="setLanguage('en')"
+                class="bg-transparent border-0 cursor-pointer p-0 font-inherit">English</button>
+        <span class="text-white">/</span>
+        <button type="button"
+                [class]="locale.activeLang() !== 'vi' ? 'text-white' : 'text-white underline font-bold'"
+                (click)="setLanguage('vi')"
+                class="bg-transparent border-0 cursor-pointer p-0 font-inherit">Tiếng Việt</button>
+      </div>
     </div>
   </header>
   <div id="content"
-       class="grow p-5">
+       class="grow w-full max-w-5xl mx-auto p-5">
     <app-expense-form></app-expense-form>
     <hr class="mt-5 mb-5">
     <app-expense-list></app-expense-list>
