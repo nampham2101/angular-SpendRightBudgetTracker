@@ -71,10 +71,12 @@ export class ExpenseForm {
   protected save() {
     const typeId = this.typeSelect()?.nativeElement.value;
 
+    const display: 'en' | 'vi' = this.locale.activeLang() === 'vi' ? 'vi' : 'en';
     this.transactionService.addTransaction(
       this.rawAmount(),
       this.notes().trim(),
-      Number(typeId)
+      Number(typeId),
+      display,
     ).subscribe({
       next: () => {
         this.rawAmount.set(0);

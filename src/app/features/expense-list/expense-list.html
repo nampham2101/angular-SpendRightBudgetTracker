@@ -8,11 +8,11 @@
     <div class="flex-1 font-bold p-1 pl-2">{{ 'notes' | transloco }}</div>
   </div>
 
-  @for (transaction of transactions$ | async; track transaction.id) {
+  @for (transaction of displayRows(); track transaction.id) {
     <div class="flex grow border">
       <div class="flex-1 border-r p-1 pl-2">{{transaction.createdDate | date: 'dd/MM/yyyy HH:mm'}}</div>
       <div class="flex-1 border-r p-1 pl-2">{{ (transaction.categoryKey || 'jar.unknown') | transloco }}</div>
-      <div class="flex-1 border-r p-1 pl-2">{{transaction.amount | currency:locale.currencyCode()
+      <div class="flex-1 border-r p-1 pl-2">{{transaction.displayAmount | currency:locale.currencyCode()
                                                                             :'symbol'
                                                                             :amountDigitsInfo()
                                                                             :locale.numberLocale()}}</div>

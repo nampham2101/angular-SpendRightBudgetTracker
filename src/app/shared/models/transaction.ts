@@ -1,5 +1,6 @@
 export interface Transaction {
   id: number;
+  /** Canonical value in USD (persisted). UI converts for VND display. */
   amount: number;
   notes: string;
   typeId: number;

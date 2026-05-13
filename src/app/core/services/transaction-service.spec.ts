@@ -3,6 +3,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 import { TransactionService } from './transaction-service';
 import { Transaction } from '../../shared/models/transaction';
+import { usdToVndMinor } from '../constants/fx';
 
 describe('TransactionService', () => {
   let service: TransactionService;
@@ -15,6 +16,7 @@ describe('TransactionService', () => {
 
   afterEach(() => {
     localStorage.clear();
+    TestBed.resetTestingModule();
   });
 
   it('should be created', () => {
@@ -35,13 +37,36 @@ describe('TransactionService', () => {
           notes: 'Coffee',
           typeId: 1,
           category: '',
-          createdDate: Date.now()
-        }
+          createdDate: Date.now(),
+        },
       ];
       localStorage.setItem('transactions', JSON.stringify(mockTransactions));
+      localStorage.setItem('spendright_amount_schema', 'usd');
 
       const service2 = new TransactionService();
       expect(service2['transactionsSubject'].value).toEqual(mockTransactions);
+    });
+
+    it('should migrate legacy VND rows to USD when schema missing and lang is vi', () => {
+      localStorage.clear();
+      localStorage.setItem('lang', 'vi');
+      localStorage.setItem(
+        'transactions',
+        JSON.stringify([
+          {
+            id: 1,
+            amount: 26_000,
+            notes: 'a',
+            typeId: 1,
+            category: '',
+            createdDate: 1,
+          },
+        ]),
+      );
+
+      const svc = new TransactionService();
+      expect(svc['transactionsSubject'].value[0].amount).toBe(1);
+      expect(localStorage.getItem('spendright_amount_schema')).toBe('usd');
     });
 
     it('should return empty array when localStorage has invalid JSON', () => {
@@ -52,13 +77,13 @@ describe('TransactionService', () => {
   });
 
   describe('addTransaction', () => {
-    it('should add transaction with correct properties', async () => {
+    it('should add transaction with USD amount when display is en', async () => {
       const amount = 250;
       const notes = 'Lunch';
       const typeId = 1;
 
       const result = await new Promise<Transaction>((resolve) => {
-        service.addTransaction(amount, notes, typeId).subscribe((transaction) => {
+        service.addTransaction(amount, notes, typeId, 'en').subscribe((transaction) => {
           resolve(transaction);
         });
       });
@@ -70,11 +95,27 @@ describe('TransactionService', () => {
       expect(result.createdDate).toBeDefined();
     });
 
+    it('should persist VND input as USD when display is vi', async () => {
+      const result = await new Promise<Transaction>((resolve) => {
+        service.addTransaction(26_000, 'Phở', 1, 'vi').subscribe((t) => resolve(t));
+      });
+
+      expect(result.amount).toBe(1);
+    });
+
+    it('should round-trip integer VND so list display matches typed amount', async () => {
+      const vnd = 50_000;
+      const result = await new Promise<Transaction>((resolve) => {
+        service.addTransaction(vnd, 'an trua', 1, 'vi').subscribe((t) => resolve(t));
+      });
+      expect(usdToVndMinor(result.amount)).toBe(vnd);
+    });
+
     it('should update transactionsSubject with new transaction', async () => {
       const initialCount = service['transactionsSubject'].value.length;
-      
+
       await new Promise<void>((resolve) => {
-        service.addTransaction(100, 'Test', 1).subscribe(() => {
+        service.addTransaction(100, 'Test', 1, 'en').subscribe(() => {
           expect(service['transactionsSubject'].value.length).toBe(initialCount + 1);
           resolve();
         });
@@ -83,7 +124,7 @@ describe('TransactionService', () => {
 
     it('should save transaction to localStorage', async () => {
       await new Promise<void>((resolve) => {
-        service.addTransaction(300, 'Dinner', 2).subscribe(() => {
+        service.addTransaction(300, 'Dinner', 2, 'en').subscribe(() => {
           const stored = localStorage.getItem('transactions');
           expect(stored).toBeTruthy();
           const parsed = JSON.parse(stored!);
@@ -96,21 +137,18 @@ describe('TransactionService', () => {
 
     it('should emit new transaction through transactions$ observable', async () => {
       let emissionCount = 0;
-      let lastEmission: Transaction[] | null = null;
 
       await new Promise<void>((resolve) => {
         service.transactions$.subscribe((transactions) => {
           emissionCount++;
-          lastEmission = transactions;
           if (emissionCount === 2) {
-            // First emission is initial, second is after add
             expect(transactions.length).toBe(1);
             expect(transactions[0].notes).toBe('Grocery');
             resolve();
           }
         });
 
-        service.addTransaction(500, 'Grocery', 1).subscribe();
+        service.addTransaction(500, 'Grocery', 1, 'en').subscribe();
       });
     });
   });
@@ -123,47 +161,6 @@ describe('TransactionService', () => {
           resolve();
         });
       });
-    });
-  });
-
-  describe('convertStoredAmountsForLanguageChange', () => {
-    it('should convert VND to USD when switching vi to en', () => {
-      const txs: Transaction[] = [
-        { id: 1, amount: 26_000, notes: 'a', typeId: 1, category: '', createdDate: 1 },
-        { id: 2, amount: 52_000, notes: 'b', typeId: 1, category: '', createdDate: 2 },
-      ];
-      localStorage.setItem('transactions', JSON.stringify(txs));
-      const svc = new TransactionService();
-
-      svc.convertStoredAmountsForLanguageChange('vi', 'en');
-
-      const out = svc['transactionsSubject'].value;
-      expect(out[0].amount).toBe(1);
-      expect(out[1].amount).toBe(2);
-    });
-
-    it('should convert USD to VND when switching en to vi', () => {
-      const txs: Transaction[] = [
-        { id: 1, amount: 1.5, notes: 'a', typeId: 1, category: '', createdDate: 1 },
-      ];
-      localStorage.setItem('transactions', JSON.stringify(txs));
-      const svc = new TransactionService();
-
-      svc.convertStoredAmountsForLanguageChange('en', 'vi');
-
-      expect(svc['transactionsSubject'].value[0].amount).toBe(39_000);
-    });
-
-    it('should no-op when from and to are the same', () => {
-      const txs: Transaction[] = [
-        { id: 1, amount: 100, notes: 'a', typeId: 1, category: '', createdDate: 1 },
-      ];
-      localStorage.setItem('transactions', JSON.stringify(txs));
-      const svc = new TransactionService();
-
-      svc.convertStoredAmountsForLanguageChange('en', 'en');
-
-      expect(svc['transactionsSubject'].value[0].amount).toBe(100);
     });
   });
 });

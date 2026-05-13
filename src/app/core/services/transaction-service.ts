@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, delay, of } from 'rxjs';
-import { USD_TO_VND_RATE } from '../constants/fx';
+import { displayAmountToUsd } from '../constants/fx';
+import { readStoredLang } from '../i18n/lang-storage';
 import { Transaction } from '../../shared/models/transaction';
 
 export type MoneyDisplayLang = 'en' | 'vi';
@@ -10,6 +11,9 @@ export type MoneyDisplayLang = 'en' | 'vi';
 })
 export class TransactionService {
   private static readonly STORAGE_KEY = 'transactions';
+  private static readonly AMOUNT_SCHEMA_KEY = 'spendright_amount_schema';
+  private static readonly AMOUNT_SCHEMA_USD = 'usd';
+
   private transactionsSubject = new BehaviorSubject<Transaction[]>(this.loadTransactions());
   transactions$ = this.transactionsSubject.asObservable();
 
@@ -18,6 +22,10 @@ export class TransactionService {
     return txs.length === 0 ? 1 : Math.max(...txs.map((t) => t.id)) + 1;
   }
 
+  /**
+   * Loads transactions; migrates legacy rows once so `amount` is always canonical USD.
+   * Legacy = data saved before USD-canonical schema (amounts were in the UI currency at save/switch time).
+   */
   private loadTransactions(): Transaction[] {
     const raw = localStorage.getItem(TransactionService.STORAGE_KEY);
 
@@ -26,7 +34,19 @@ export class TransactionService {
     }
 
     try {
-      return JSON.parse(raw) as Transaction[];
+      let txs = JSON.parse(raw) as Transaction[];
+
+      if (localStorage.getItem(TransactionService.AMOUNT_SCHEMA_KEY) !== TransactionService.AMOUNT_SCHEMA_USD) {
+        const display: MoneyDisplayLang = readStoredLang() === 'vi' ? 'vi' : 'en';
+        txs = txs.map((t) => ({
+          ...t,
+          amount: displayAmountToUsd(t.amount, display),
+        }));
+        localStorage.setItem(TransactionService.STORAGE_KEY, JSON.stringify(txs));
+        localStorage.setItem(TransactionService.AMOUNT_SCHEMA_KEY, TransactionService.AMOUNT_SCHEMA_USD);
+      }
+
+      return txs;
     } catch {
       return [];
     }
@@ -37,42 +57,18 @@ export class TransactionService {
   }
 
   /**
-   * Amounts in storage are always in the active display currency (USD when lang is en, VND when vi).
-   * Rewrites all rows when the user switches language so values stay equivalent at the fixed rate.
+   * @param amountDisplay Amount as entered in the active UI currency (USD if en, whole VND if vi).
+   * @param display Which currency the display amount uses.
    */
-  convertStoredAmountsForLanguageChange(from: MoneyDisplayLang, to: MoneyDisplayLang): void {
-    if (from === to) {
-      return;
-    }
-
-    const txs = this.transactionsSubject.value;
-    if (txs.length === 0) {
-      return;
-    }
-
-    const rate = USD_TO_VND_RATE;
-    const next = txs.map((t) => {
-      let amount = t.amount;
-      if (from === 'vi' && to === 'en') {
-        amount = Math.round((t.amount / rate) * 100) / 100;
-      } else if (from === 'en' && to === 'vi') {
-        amount = Math.round(t.amount * rate);
-      }
-      return { ...t, amount };
-    });
-
-    this.transactionsSubject.next(next);
-    this.saveTransaction(next);
-  }
-
-  addTransaction(amount: number, notes: string, typeId: number) {
+  addTransaction(amountDisplay: number, notes: string, typeId: number, display: MoneyDisplayLang) {
+    const amountUsd = displayAmountToUsd(amountDisplay, display);
     const transaction: Transaction = {
       id: this._getNewId(),
-      amount: amount,
+      amount: amountUsd,
       notes: notes,
       typeId: typeId,
       category: '',
-      createdDate: Date.now()
+      createdDate: Date.now(),
     };
 
     const next = [...this.transactionsSubject.value, transaction];
