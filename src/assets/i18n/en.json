@@ -4,5 +4,33 @@
   "type": "Category",
   "save": "Save",
   "date": "Date",
-  "history": "History"
+  "history": "History",
+  "jarReferenceTitle": "What each jar is for",
+  "jar": {
+    "unknown": "Unknown",
+    "nec": {
+      "name": "Necessities (NEC)",
+      "description": "Must-pay living costs: housing, food, utilities, transport, insurance, and other recurring essentials."
+    },
+    "ffa": {
+      "name": "Financial Freedom (FFA)",
+      "description": "Build long-term wealth: investments, retirement accounts, and anything that grows your financial independence."
+    },
+    "ltss": {
+      "name": "Long-term savings (LTSS)",
+      "description": "Big planned spends: vacations, vehicles, weddings, home projects—money you set aside for larger goals."
+    },
+    "edu": {
+      "name": "Education (EDU)",
+      "description": "Grow your skills and earning power: courses, books, certifications, coaching, and professional development."
+    },
+    "play": {
+      "name": "Play (PLAY)",
+      "description": "Guilt-free fun: hobbies, dining out, entertainment, and experiences that recharge you without blowing the budget."
+    },
+    "give": {
+      "name": "Give (GIVE)",
+      "description": "Generosity: donations, gifts, community support, and causes you care about."
+    }
+  }
 }

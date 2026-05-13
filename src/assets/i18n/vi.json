@@ -4,5 +4,33 @@
   "type": "Loại",
   "save": "Lưu",
   "date": "Ngày",
-  "history": "Lịch sử"
+  "history": "Lịch sử",
+  "jarReferenceTitle": "Ý nghĩa từng lọ JARS",
+  "jar": {
+    "unknown": "Không xác định",
+    "nec": {
+      "name": "Sinh hoạt thiết yếu (NEC)",
+      "description": "Chi phí sống cần thiết: nhà ở, ăn uống, điện nước, đi lại, bảo hiểm và các khoản định kỳ không thể bỏ qua."
+    },
+    "ffa": {
+      "name": "Tài chính tự do (FFA)",
+      "description": "Xây dựng tài sản dài hạn: đầu tư, tiết kiệm hưu trí, và mọi thứ giúp bạn độc lập tài chính hơn."
+    },
+    "ltss": {
+      "name": "Tiết kiệm dài hạn (LTSS)",
+      "description": "Các mục tiêu chi lớn có kế hoạch: du lịch, xe cộ, cưới hỏi, sửa nhà—tiền dành cho mục tiêu lớn."
+    },
+    "edu": {
+      "name": "Giáo dục (EDU)",
+      "description": "Phát triển kỹ năng và thu nhập: khóa học, sách, chứng chỉ, coaching và đào tạo nghề nghiệp."
+    },
+    "play": {
+      "name": "Giải trí (PLAY)",
+      "description": "Thư giãn có chừng: sở thích, cà phê, giải trí, trải nghiệm giúp bạn nạp lại năng lượng mà không vượt quá ngân sách."
+    },
+    "give": {
+      "name": "Cho đi (GIVE)",
+      "description": "Lòng hảo tâm: quyên góp, quà tặng, hỗ trợ cộng đồng và các hoạt động thiện nguyện."
+    }
+  }
 }
