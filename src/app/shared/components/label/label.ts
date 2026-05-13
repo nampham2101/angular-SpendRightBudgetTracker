@@ -7,5 +7,5 @@ import {Component, input} from '@angular/core';
   styleUrl: './label.css',
 })
 export class Label {
-  labelTexts = input.required();
+  labelTexts = input.required<string>();
 }

@@ -1,29 +1,23 @@
-import {ChangeDetectionStrategy, Component, signal} from '@angular/core';
-import ExpenseForm from './features/expense-form/expense-form';
-import {ExpenseList} from './features/expense-list/expense-list';
-import {TranslocoService} from '@jsverse/transloco';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { TranslocoService } from '@jsverse/transloco';
+import { ExpenseForm } from './features/expense-form/expense-form';
+import { ExpenseList } from './features/expense-list/expense-list';
+import { LocalePreferenceService } from './core/services/locale-preference';
 
 @Component({
   selector: 'app-root',
-  imports: [
-    ExpenseForm,
-    ExpenseList
-  ],
+  imports: [ExpenseForm, ExpenseList],
   templateUrl: './app.html',
   styleUrl: './app.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
   protected readonly title = signal('Spend Right - Budget Tracker');
-  language = signal("");
+  private readonly transloco = inject(TranslocoService);
+  protected readonly locale = inject(LocalePreferenceService);
 
-  constructor(private transloco: TranslocoService) {
-    this.language.set(localStorage.getItem('lang') || 'en');
-  }
-
-  protected setLanguage(lang: string) {
-    localStorage.setItem('lang', lang);
-    this.language.set(lang);
+  protected setLanguage(lang: string): void {
+    this.locale.setLang(lang);
     this.transloco.setActiveLang(lang);
   }
 }

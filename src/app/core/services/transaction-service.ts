@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import {BehaviorSubject, delay, map, of} from 'rxjs';
-import {Transaction} from '../../shared/models/transaction';
+import { BehaviorSubject, delay, of } from 'rxjs';
+import { Transaction } from '../../shared/models/transaction';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +11,8 @@ export class TransactionService {
   transactions$ = this.transactionsSubject.asObservable();
 
   private _getNewId(): number {
-    return Math.floor(Math.random() * 1000000);
+    const txs = this.transactionsSubject.value;
+    return txs.length === 0 ? 1 : Math.max(...txs.map((t) => t.id)) + 1;
   }
 
   private loadTransactions(): Transaction[] {
@@ -46,9 +47,6 @@ export class TransactionService {
     this.transactionsSubject.next(next);
     this.saveTransaction(next);
 
-    return of(transaction).pipe(
-      delay(500),
-      map(x => x)
-    );
+    return of(transaction).pipe(delay(500));
   }
 }

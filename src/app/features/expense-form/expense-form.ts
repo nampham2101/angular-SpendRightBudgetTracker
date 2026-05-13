@@ -1,25 +1,41 @@
-import {Component, computed, ElementRef, signal, viewChild} from '@angular/core';
-import {TranslocoPipe} from '@jsverse/transloco';
-import {TransactionService} from '../../core/services/transaction-service';
-import {EXPENSE_TYPES} from '../../shared/data/expense-types';
-import {BlockTitle} from '../../shared/components/block-title/block-title';
-import {Label} from '../../shared/components/label/label';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  ElementRef,
+  inject,
+  signal,
+  viewChild,
+} from '@angular/core';
+import { TranslocoPipe } from '@jsverse/transloco';
+import { TransactionService } from '../../core/services/transaction-service';
+import { LocalePreferenceService } from '../../core/services/locale-preference';
+import { EXPENSE_TYPES } from '../../shared/data/expense-types';
+import { BlockTitle } from '../../shared/components/block-title/block-title';
+import { Label } from '../../shared/components/label/label';
 
 @Component({
   selector: 'app-expense-form',
-  imports: [
-    TranslocoPipe,
-    BlockTitle,
-    Label
-  ],
+  imports: [TranslocoPipe, BlockTitle, Label],
   templateUrl: './expense-form.html',
   styleUrl: './expense-form.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-class ExpenseForm {
-  amount = signal("");
+export class ExpenseForm {
+  private readonly locale = inject(LocalePreferenceService);
+
   rawAmount = signal(0);
-  title = signal("Expense");
-  notes = signal("");
+  title = signal('Expense');
+  notes = signal('');
+
+  displayAmount = computed(() => {
+    const n = this.rawAmount();
+    if (n === 0) {
+      return '';
+    }
+    return n.toLocaleString(this.locale.numberLocale());
+  });
+
   expenseTypes = computed(() => {
     const newNotes = this.notes().trim();
 
@@ -34,10 +50,9 @@ class ExpenseForm {
     }));
   });
 
-  typeSelect = viewChild<ElementRef<HTMLSelectElement>>('typeSelect')
+  typeSelect = viewChild<ElementRef<HTMLSelectElement>>('typeSelect');
 
-  constructor(protected transactionService: TransactionService) {
-  }
+  protected transactionService = inject(TransactionService);
 
   protected onNotesChanged(event: Event) {
     this.notes.set((event.target as HTMLInputElement).value);
@@ -48,10 +63,6 @@ class ExpenseForm {
 
     const _rawAmount = _amount.replace(/\D/g, '');
     this.rawAmount.set(Number(_rawAmount));
-
-    const localeString = localStorage.getItem('lang') === 'en' ? 'en-US' : 'vi-VN';
-    const formattedAmount = this.rawAmount().toLocaleString(localeString);
-    this.amount.set(formattedAmount);
   }
 
   protected save() {
@@ -63,9 +74,8 @@ class ExpenseForm {
       Number(typeId)
     ).subscribe({
       next: () => {
-        this.amount.set("");
         this.rawAmount.set(0);
-        this.notes.set("");
+        this.notes.set('');
       },
       error: err => {
         console.error('Error adding transaction', err);
@@ -73,5 +83,3 @@ class ExpenseForm {
     });
   }
 }
-
-export default ExpenseForm

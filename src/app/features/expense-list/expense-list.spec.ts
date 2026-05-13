@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslocoTestingModule } from '@jsverse/transloco';
 
 import { ExpenseList } from './expense-list';
 
@@ -8,7 +9,13 @@ describe('ExpenseList', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ExpenseList],
+      imports: [
+        ExpenseList,
+        TranslocoTestingModule.forRoot({
+          langs: { en: {}, vi: {} },
+          translocoConfig: { availableLangs: ['en', 'vi'], defaultLang: 'en' },
+        }),
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ExpenseList);

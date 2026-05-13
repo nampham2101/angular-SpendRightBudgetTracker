@@ -13,6 +13,7 @@ describe('BlockTitle', () => {
 
     fixture = TestBed.createComponent(BlockTitle);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('title', 'Test');
     await fixture.whenStable();
   });
 

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, it, expect, beforeEach } from 'vitest';
 
-import ExpenseForm from './expense-form';
+import { ExpenseForm } from './expense-form';
 
 /**
  * Note: Full component tests for ExpenseForm are limited due to Transloco i18n dependencies.
