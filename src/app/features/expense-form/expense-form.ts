@@ -24,6 +24,9 @@ import { Label } from '../../shared/components/label/label';
 export class ExpenseForm {
   private readonly locale = inject(LocalePreferenceService);
 
+  /** Stable list for help copy (names + descriptions); select uses `expenseTypes()` with keyword state. */
+  protected readonly jars = EXPENSE_TYPES;
+
   rawAmount = signal(0);
   title = signal('Expense');
   notes = signal('');

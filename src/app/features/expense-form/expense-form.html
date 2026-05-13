@@ -18,9 +18,20 @@
     <app-label [labelTexts]="'type' | transloco"></app-label>
     <select #typeSelect class="border rounded-md">
       @for (expenseType of expenseTypes(); track expenseType.id) {
-        <option [value]="expenseType.id" [selected]="expenseType.selected">{{expenseType.name}}</option>
+        <option [value]="expenseType.id" [selected]="expenseType.selected">{{ expenseType.nameKey | transloco }}</option>
       }
     </select>
+    <details class="mt-2 text-sm text-slate-600 border border-slate-200 rounded-md p-2 bg-slate-50">
+      <summary class="cursor-pointer font-medium text-slate-800 select-none">{{ 'jarReferenceTitle' | transloco }}</summary>
+      <ul class="mt-2 space-y-2 list-none m-0 p-0">
+        @for (jar of jars; track jar.id) {
+          <li>
+            <span class="font-semibold text-slate-800">{{ jar.nameKey | transloco }}</span>
+            <span class="text-slate-600"> — {{ jar.descriptionKey | transloco }}</span>
+          </li>
+        }
+      </ul>
+    </details>
   </div>
   <button (click)="save()"
           class="border rounded-md mt-5 p-3 pt-1 pb-1 bg-blue-700 text-white">{{ 'save' | transloco }}</button>

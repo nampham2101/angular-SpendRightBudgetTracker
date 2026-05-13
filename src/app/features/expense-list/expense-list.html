@@ -11,7 +11,7 @@
   @for (transaction of transactions$ | async; track transaction.id) {
     <div class="flex grow border">
       <div class="flex-1 border-r p-1 pl-2">{{transaction.createdDate | date: 'dd/MM/yyyy HH:mm'}}</div>
-      <div class="flex-1 border-r p-1 pl-2">{{transaction.category}}</div>
+      <div class="flex-1 border-r p-1 pl-2">{{ (transaction.categoryKey || 'jar.unknown') | transloco }}</div>
       <div class="flex-1 border-r p-1 pl-2">{{transaction.amount | currency:locale.currencyCode()
                                                                             :'symbol'
                                                                             :'1.0-0'
