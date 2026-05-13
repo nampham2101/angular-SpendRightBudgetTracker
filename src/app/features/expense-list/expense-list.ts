@@ -5,6 +5,7 @@ import {TranslocoPipe} from '@jsverse/transloco';
 import {map, Observable} from 'rxjs';
 import {Transaction} from '../../shared/models/transaction';
 import {EXPENSE_TYPES} from '../../shared/data/expense-types';
+import {BlockTitle} from '../../shared/components/block-title/block-title';
 
 @Component({
   selector: 'app-expense-list',
@@ -12,7 +13,8 @@ import {EXPENSE_TYPES} from '../../shared/data/expense-types';
     AsyncPipe,
     TranslocoPipe,
     DatePipe,
-    CurrencyPipe
+    CurrencyPipe,
+    BlockTitle
   ],
   templateUrl: './expense-list.html',
   styleUrl: './expense-list.css',

@@ -1,7 +1,7 @@
 <div class="flex flex-col gap-3">
-  <h3 class="text-2xl font-bold text-heading">{{title()}}</h3>
+  <app-block-title [title]="title()"></app-block-title>
   <div class="flex flex-col gap-1">
-    <label for="">{{ 'amount' | transloco }}:</label>
+    <app-label [labelTexts]="'amount' | transloco"></app-label>
     <input type="text"
            [value]="amount()"
            (input)="onAmountInput($event)"
@@ -9,14 +9,13 @@
            class="border rounded-md p-3 pt-1 pb-1">
   </div>
   <div class="flex flex-col gap-1">
-    <label for="">{{ 'notes' | transloco }}:</label>
-    <textarea placeholder="Notes"
-              [value]="notes()"
+    <app-label [labelTexts]="'notes' | transloco"></app-label>
+    <textarea [value]="notes()"
               (input)="onNotesChanged($event)"
               class="border rounded-md p-3 pt-1 pb-1"></textarea>
   </div>
   <div class="flex flex-col gap-1">
-    <label for="">{{ 'type' | transloco }}:</label>
+    <app-label [labelTexts]="'type' | transloco"></app-label>
     <select #typeSelect class="border rounded-md">
       @for (expenseType of expenseTypes(); track expenseType.id) {
         <option [value]="expenseType.id" [selected]="expenseType.selected">{{expenseType.name}}</option>

@@ -2,11 +2,15 @@ import {Component, computed, ElementRef, signal, viewChild} from '@angular/core'
 import {TranslocoPipe} from '@jsverse/transloco';
 import {TransactionService} from '../../core/services/transaction-service';
 import {EXPENSE_TYPES} from '../../shared/data/expense-types';
+import {BlockTitle} from '../../shared/components/block-title/block-title';
+import {Label} from '../../shared/components/label/label';
 
 @Component({
   selector: 'app-expense-form',
   imports: [
-    TranslocoPipe
+    TranslocoPipe,
+    BlockTitle,
+    Label
   ],
   templateUrl: './expense-form.html',
   styleUrl: './expense-form.css',
